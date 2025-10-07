@@ -404,6 +404,7 @@
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/PowerUp.cs"
 "Assets/Scripts/RotateCamera.cs"
+"Assets/Scripts/outOfBoundsTrigger.cs"
 -langversion:9.0
 /deterministic
 /optimize+
