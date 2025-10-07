@@ -17,7 +17,22 @@ public class PowerUp : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playerControllerScript = GameObject.Find("MainCamera").GetComponent<PlayerController>();
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        // Déterminer le type en fonction du tag de l'objet
+        switch (gameObject.tag)
+        {
+            case "eclairPower":
+                type = PowerUpType.augmenteForce;
+                break;
+            case "gemmePower":
+                type = PowerUpType.tailleMasseBoost;
+                break;
+            default:
+                Debug.LogWarning("PowerUp non reconnu : tag = " + gameObject.tag);
+                break;
+        }
+
     }
 
     // Update is called once per frame

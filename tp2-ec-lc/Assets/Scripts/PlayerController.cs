@@ -4,18 +4,49 @@ public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody rbPlayer;
-    private float moveSpeed = 1f;
+    private float moveSpeed = 5f;
 
-    public GameObject player;
+    public Camera mainCam;
+    //public GameObject player; Demander au prof
+    private Material playerMat;
+
+    private bool isBoostMasse = false;
+    private bool isBoostForce = false;
+
+    private float powerUpTimer = 0f;
+    private float hitEffectTimer = 0f;
+
+    private readonly float hitEffectDuration = 1f;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rbPlayer = player.GetComponent<Rigidbody>();
+        rbPlayer = GetComponent<Rigidbody>();
+        playerMat = GetComponent<Renderer>().material;
+        mainCam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //timer pour les power-ups
+        if (powerUpTimer > 0f)
+        {
+            powerUpTimer -= Time.deltaTime;
+            if (powerUpTimer <= 0f)
+            {
+                ResetPowerUps();
+            }
+        }
+
+        // timer pour le hit effect (effet rouge)
+        if (hitEffectTimer > 0f)
+        {
+            hitEffectTimer -= Time.deltaTime;
+            playerMat.SetFloat("_hitEffect", Mathf.Clamp01(hitEffectTimer / hitEffectDuration));
+        }
 
     }
     private void FixedUpdate()
@@ -23,7 +54,7 @@ public class PlayerController : MonoBehaviour
         //Faut-il-détecter l'input d'abord ? je ne pense pas ?
 
         // 1. Direction vers laquelle la caméra regarde (pas sa position !)
-        Vector3 directionCam = transform.forward;
+        Vector3 directionCam = mainCam.transform.forward;
 
         // 2. Supprimer la composante Y pour rester dans le plan XZ
         directionCam.y = 0;
@@ -51,35 +82,67 @@ public class PlayerController : MonoBehaviour
 
     public void EnablePowerUp(PowerUp.PowerUpType type)
     {
-        if (type == PowerUp.PowerUpType.tailleMasseBoost)
-        {
+        //Instancie le temps de powerup
+        powerUpTimer = 10f;
 
+        //effet en fonction du power-up
+        switch (type)
+        {
+            case PowerUp.PowerUpType.tailleMasseBoost:
+                isBoostMasse = true;
+
+                transform.localScale = Vector3.one * 2f;
+                rbPlayer.mass *= 2f;
+
+                playerMat.SetFloat("_isBoostMasse", 1f); // variable bool shader
+                break;
+
+            case PowerUp.PowerUpType.augmenteForce:
+                isBoostForce = true;
+
+                playerMat.SetFloat("_isBoostForce", 1f); // variable bool shader
+                break;
+        }
+    }
+
+    private void ResetPowerUps()
+    {
+        if (isBoostMasse)
+        {
+            isBoostMasse = false;
+            transform.localScale = Vector3.one;
+            rbPlayer.mass /= 2f;
+            playerMat.SetFloat("_isBoostMasse", 0f);
         }
 
-        if (type == PowerUp.PowerUpType.augmenteForce)
+        if (isBoostForce)
         {
-
+            isBoostForce = false;
+            playerMat.SetFloat("_isBoostForce", 0f);
         }
-
-        //Exemple
-        //case PowerUp.PowerUpType.tailleMasseBoost:
-        //    Debug.Log("Power-Up : Taille/Masse Boost !");
-        //    transform.localScale *= 2f;
-        //    GetComponent<Rigidbody>().mass *= 2f;
-        //    break;
-
-        //case PowerUp.PowerUpType.augmenteForce:
-        //    Debug.Log("Power-Up : Force augmentée !");
-        //    moveSpeed *= 2f;
-        //    break;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Collision avec un ennemi !");
-            // Tu peux ici appliquer des dégâts, redémarrer le niveau, etc.
+            // Appliquer une force physique à l’ennemi
+            Rigidbody enemyRb = collision.gameObject.GetComponent<Rigidbody>();
+
+            if (enemyRb != null)
+            {
+                Vector3 pushDir = collision.transform.position - transform.position;
+                //pushDir.y = 0;
+                pushDir.Normalize();
+
+                float impactForce = isBoostForce ? 20f : 5f;
+
+                enemyRb.AddForce(pushDir * impactForce, ForceMode.Impulse);
+            }
+
+            // Déclencher l'effet rouge sur le joueur
+            hitEffectTimer = hitEffectDuration;
+            playerMat.SetFloat("_hitEffect", 1f);
         }
     }
 }

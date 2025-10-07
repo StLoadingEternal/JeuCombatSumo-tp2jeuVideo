@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,10 +9,11 @@ public class LevelController : MonoBehaviour
 
     
     public GameObject enemyPrefab;
-    public GameObject[] powerUpPrefabs;
+    public GameObject[] powerUpPrefabs;// Les deux sortes de power-up
     public Transform player;
+    public GameObject island;//L'île sur laquelle se déroule jeu
 
-    
+
     public int nombreEnemiAuDebut = 1;        // nombre d’ennemis de la première vague
     public float difficulty = 0.2f;       // commence à 0.2 (facile)
     public float difficultyIncrease = 0.1f; // augmentation par vague
@@ -45,6 +47,8 @@ public class LevelController : MonoBehaviour
         difficulty += difficultyIncrease;
         difficulty = Mathf.Clamp01(difficulty);
 
+        
+
         // Nombre d’ennemis basé sur la difficulté
         int enemyCount = Mathf.RoundToInt(nombreEnemiAuDebut + currentWave * difficulty * 3f);
         enemiesRemaining = enemyCount;
@@ -65,7 +69,31 @@ public class LevelController : MonoBehaviour
                 enemyController.InitializeEnemy(player, difficulty);
             }
         }
-        
+
+        // Faire spawn un nouveau power up
+        spawnPowerUp();
+    }
+
+    public void spawnPowerUp()
+    {
+        if (powerUpPrefabs.Length > 0 && island != null)
+        {
+            // Choisir un power-up aléatoire
+            GameObject randomPowerUp = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
+
+            // Calculer les limites de l'île
+            Bounds islandBounds = island.GetComponent<Collider>().bounds;
+
+            //Position de spawn aléatoire sur l'île (il apparait un peu en dehors)
+            Vector3 spawnPos = new Vector3(
+                Random.Range(islandBounds.min.x, islandBounds.max.x),
+                islandBounds.max.y + 0.5f, // un peu au-dessus du sol
+                Random.Range(islandBounds.min.z, islandBounds.max.z)
+            );
+
+            Instantiate(randomPowerUp, spawnPos, Quaternion.identity);
+
+        }
     }
 
     // quand un enemi sort de l'arene 
@@ -82,6 +110,8 @@ public class LevelController : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
+        //Ajouter l'audio de gameOver
+        //Animation de fin
     }
     
 }
