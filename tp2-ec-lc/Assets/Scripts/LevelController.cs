@@ -81,15 +81,36 @@ public class LevelController : MonoBehaviour
             // Choisir un power-up aléatoire
             GameObject randomPowerUp = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
 
-            // Calculer les limites de l'île
-            Bounds islandBounds = island.GetComponent<Collider>().bounds;
+            // Récupérer le collider et son centre
+            Collider islandCollider = island.GetComponent<Collider>();
+            Bounds islandBounds = islandCollider.bounds;
 
-            //Position de spawn aléatoire sur l'île (il apparait un peu en dehors)
+            // Centre de l'île (en X et Z)
+            Vector3 center = islandBounds.center;
+
+            // Rayon max (en prenant la moitié de la plus petite dimension X ou Z pour rester dans l'île)
+            float radius = Mathf.Min(islandBounds.extents.x, islandBounds.extents.z);
+
+            // Générer une position aléatoire dans un cercle (X,Z)
+            Vector2 randomPos2D = Random.insideUnitCircle * radius;
+
+            // Construire la position 3D en ajoutant Y (un peu au-dessus du sol)
             Vector3 spawnPos = new Vector3(
-                Random.Range(islandBounds.min.x, islandBounds.max.x),
-                islandBounds.max.y + 0.5f, // un peu au-dessus du sol
-                Random.Range(islandBounds.min.z, islandBounds.max.z)
+                center.x + randomPos2D.x,
+                islandBounds.max.y + 1f,
+                center.z + randomPos2D.y
             );
+
+            //// Calculer les limites de l'île
+            //Bounds islandBounds = island.GetComponent<Collider>().bounds;
+            //float marginX = 0.5f;
+
+            ////Position de spawn aléatoire sur l'île (il apparait un peu en dehors)
+            //Vector3 spawnPos = new Vector3(
+            //    Random.Range(islandBounds.min.x - marginX, islandBounds.max.x - marginX),
+            //    islandBounds.max.y + 0.5f, // un peu au-dessus du sol
+            //    Random.Range(islandBounds.min.z, islandBounds.max.z)
+            //);
 
             Instantiate(randomPowerUp, spawnPos, Quaternion.identity);
 

@@ -3,7 +3,7 @@ using UnityEngine;
 public class RotateCamera : MonoBehaviour
 {
 
-    public float rotationSpeed = 500f;
+    public float rotationSpeed = 100f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
