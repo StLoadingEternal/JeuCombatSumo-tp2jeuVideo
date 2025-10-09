@@ -318,7 +318,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 473846654}
   serializedVersion: 4
-  m_Mass: 6
+  m_Mass: 11
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -394,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44af76bed2a40b5abbda57d96effbde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   enemyPrefab: {fileID: 6926429926770317748, guid: 920e5ef3fd527294f8ea891949d86cc1, type: 3}
   powerUpPrefabs:
   - {fileID: 107744, guid: 0782c4fdae5f1624ba26300a1dc7a0a7, type: 3}

@@ -1,13 +1,13 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Serialization;
 
 public class LevelController : MonoBehaviour
 {
    
     public static LevelController instance;
-
-    
+    public Camera mainCamera;
     public GameObject enemyPrefab;
     public GameObject[] powerUpPrefabs;// Les deux sortes de power-up
     public Transform player;
@@ -32,6 +32,7 @@ public class LevelController : MonoBehaviour
 
     private void Start()
     {
+        mainCamera = Camera.main;
         player = GameObject.FindWithTag("Player").transform;
         StartNewWave(); // on commence une vague d'Enemis
     }
@@ -48,7 +49,6 @@ public class LevelController : MonoBehaviour
         difficulty = Mathf.Clamp01(difficulty);
 
         
-
         // Nombre d’ennemis basé sur la difficulté
         int enemyCount = Mathf.RoundToInt(nombreEnemiAuDebut + currentWave * difficulty * 3f);
         enemiesRemaining = enemyCount;
@@ -110,7 +110,16 @@ public class LevelController : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
+        
         //Ajouter l'audio de gameOver
+        AudioClip newClip = Resources.Load<AudioClip>("Musics/wasted");
+        AudioSource audioSource = mainCamera.GetComponent<AudioSource>();
+        
+        audioSource.Stop();
+        audioSource.clip = newClip;
+        audioSource.loop = false;
+        audioSource.Play();
+
         //Animation de fin
     }
     

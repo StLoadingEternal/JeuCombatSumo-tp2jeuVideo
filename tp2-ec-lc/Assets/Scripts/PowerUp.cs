@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-
+    private EnemyController enemyControllerScript;
     PlayerController playerControllerScript;
     public enum PowerUpType
     {
@@ -19,7 +19,7 @@ public class PowerUp : MonoBehaviour
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        // Déterminer le type en fonction du tag de l'objet
+        // Dï¿½terminer le type en fonction du tag de l'objet
         switch (gameObject.tag)
         {
             case "eclairPower":

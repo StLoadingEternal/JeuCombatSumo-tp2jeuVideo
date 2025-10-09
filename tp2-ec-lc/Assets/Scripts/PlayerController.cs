@@ -4,8 +4,9 @@ public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody rbPlayer;
-    private float moveSpeed = 5f;
-
+    private float moveSpeed = 20f;
+    private float currentSpeed;
+    
     public Camera mainCam;
     //public GameObject player; Demander au prof
     private Material playerMat;
@@ -17,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private float hitEffectTimer = 0f;
 
     private readonly float hitEffectDuration = 1f;
+    
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -51,31 +54,32 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //Faut-il-détecter l'input d'abord ? je ne pense pas ?
+        //Faut-il-dï¿½tecter l'input d'abord ? je ne pense pas ?
 
-        // 1. Direction vers laquelle la caméra regarde (pas sa position !)
+        // 1. Direction vers laquelle la camï¿½ra regarde (pas sa position !)
         Vector3 directionCam = mainCam.transform.forward;
 
         // 2. Supprimer la composante Y pour rester dans le plan XZ
         directionCam.y = 0;
 
-        // 3. Normaliser pour éviter une vitesse trop grande ou instable
+        // 3. Normaliser pour ï¿½viter une vitesse trop grande ou instable
         directionCam = directionCam.normalized;
-
-        // 4. Tourner l'objet dans la direction de déplacement (facultatif)
+        
+        // 4. Tourner l'objet dans la direction de dï¿½placement (facultatif)
         //player.transform.forward = directionCam;
 
         // 5. Appliquer une force physique dans cette direction
         rbPlayer.AddForce(directionCam * moveSpeed, ForceMode.Force);
+        
+        
 
-
-        // Si tu veux pousser dans le sens opposé, remplace par :
+        // Si tu veux pousser dans le sens opposï¿½, remplace par :
         // rb.AddForce(-camDir * moveSpeed, ForceMode.Acceleration);
 
-        // Bon pour le déplacement joueur (stable)
+        // Bon pour le dï¿½placement joueur (stable)
         //rb.AddForce(direction * moveSpeed, ForceMode.Acceleration);
 
-        // Plus réaliste mais influencé par la masse
+        // Plus rï¿½aliste mais influencï¿½ par la masse
         //rb.AddForce(direction * moveSpeed, ForceMode.Force);
         //rbPlayer.AddForce(directionCam * moveSpeed * Time.deltaTime, ForceMode.Force); Plus lent
     }
@@ -126,7 +130,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Appliquer une force physique à l’ennemi
+            // Appliquer une force physique ï¿½ lï¿½ennemi
             Rigidbody enemyRb = collision.gameObject.GetComponent<Rigidbody>();
 
             if (enemyRb != null)
@@ -140,7 +144,7 @@ public class PlayerController : MonoBehaviour
                 enemyRb.AddForce(pushDir * impactForce, ForceMode.Impulse);
             }
 
-            // Déclencher l'effet rouge sur le joueur
+            // Dï¿½clencher l'effet rouge sur le joueur
             hitEffectTimer = hitEffectDuration;
             playerMat.SetFloat("_hitEffect", 1f);
         }
