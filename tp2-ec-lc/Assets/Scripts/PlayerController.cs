@@ -14,12 +14,13 @@ public class PlayerController : MonoBehaviour
     private bool isBoostMasse = false;
     private bool isBoostForce = false;
 
-    private float powerUpTimer = 0f;
+    private float powerUpTimer1 = 0f;
+    private float powerUpTimer2 = 0f;
     private float hitEffectTimer = 0f;
 
     private readonly float hitEffectDuration = 1f;
 
-    float resistance = 0.1f;
+    float resistance = 1f;
     
     
 
@@ -37,12 +38,22 @@ public class PlayerController : MonoBehaviour
     {
 
         //timer pour les power-ups
-        if (powerUpTimer > 0f)
+        if (powerUpTimer1 > 0f)
         {
-            powerUpTimer -= Time.deltaTime;
-            if (powerUpTimer <= 0f)
+            powerUpTimer1 -= Time.deltaTime;
+            if (powerUpTimer1 <= 0f)
             {
-                ResetPowerUps();
+                diasblePowerUpsTailleMasse();
+            }
+        }
+
+        if (powerUpTimer2 > 0f)
+        {
+            powerUpTimer2 -= Time.deltaTime;
+            if (powerUpTimer2 <= 0f)
+            {
+               
+                diasblePowerUpsForce();
             }
         }
 
@@ -71,7 +82,7 @@ public class PlayerController : MonoBehaviour
         //player.transform.forward = directionCam;
 
         // 5. Appliquer une force physique dans cette direction
-        rbPlayer.AddForce(directionCam * moveSpeed, ForceMode.Acceleration);
+        rbPlayer.AddForce(directionCam * moveSpeed * resistance, ForceMode.Acceleration);
         
         
 
@@ -89,22 +100,32 @@ public class PlayerController : MonoBehaviour
     public void EnablePowerUp(PowerUp.PowerUpType type)
     {
         //Instancie le temps de powerup
-        powerUpTimer = 20f;
+        
 
         //effet en fonction du power-up
         switch (type)
         {
             case PowerUp.PowerUpType.tailleMasseBoost:
+                if (isBoostMasse)
+                {
+                    powerUpTimer1 += 10;
+                    return;
+                }
+                powerUpTimer1 = 20f;
                 isBoostMasse = true;
 
                 transform.localScale = Vector3.one * 1.5f;
                 rbPlayer.mass *= 1.5f;
-                resistance = 0.6f;
+                resistance = 0.5f;
 
                 playerMat.SetFloat("_isBoostMasse", 1f); // variable bool shader
                 break;
 
             case PowerUp.PowerUpType.augmenteForce:
+                if (isBoostForce) { powerUpTimer2 += 10;
+                    return;
+                }
+                powerUpTimer2 = 20f;
                 isBoostForce = true;
 
                 playerMat.SetFloat("_isBoostForce", 1f); // variable bool shader
@@ -112,17 +133,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ResetPowerUps()
+    private void diasblePowerUpsTailleMasse()
     {
         if (isBoostMasse)
         {
             isBoostMasse = false;
             transform.localScale = Vector3.one;
             rbPlayer.mass /= 1.5f;
-            resistance = 0.1f;
+            resistance = 1f;
             playerMat.SetFloat("_isBoostMasse", 0f);
         }
 
+      
+    }
+
+    private void diasblePowerUpsForce()
+    {
         if (isBoostForce)
         {
             isBoostForce = false;
@@ -143,9 +169,9 @@ public class PlayerController : MonoBehaviour
                 //pushDir.y = 0;
                 pushDir.Normalize();
 
-                float impactForce = isBoostForce ? 100f : 10f;
+                float impactForce = isBoostForce ? 100f : 20f;
 
-                enemyRb.AddForce(pushDir * impactForce * resistance, ForceMode.Impulse);
+                enemyRb.AddForce(pushDir * impactForce, ForceMode.Impulse);
             }
 
             // D�clencher l'effet rouge sur le joueur
