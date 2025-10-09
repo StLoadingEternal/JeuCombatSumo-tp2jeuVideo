@@ -24,5 +24,10 @@ MonoBehaviour:
   - '{}'
   - '{}'
   - '{}'
+<<<<<<< HEAD
   - '{"position":{"x":622.0,"y":43.0,"z":0.0},"scale":{"x":0.3276672661304474,"y":0.3276672661304474,"z":1.0}}'
   - '{"m_Version":0,"m_SelectedElementsArray":[]}'
+=======
+  - '{"position":{"x":860.0,"y":-293.0,"z":0.0},"scale":{"x":0.6136459112167358,"y":0.6136459112167358,"z":1.0}}'
+  - '{"m_Version":4,"m_SelectedElementsArray":[]}'
+>>>>>>> 41ee6a108ef3d18034da196687eb273618ae1cf5

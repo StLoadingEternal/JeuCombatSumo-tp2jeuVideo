@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     private Transform playerPos;
     public float speed;
 
+    private float niveauDifficulte;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,13 +29,23 @@ public class EnemyController : MonoBehaviour
         
         // Déplacement continu vers le joueur
         Vector3 direction = (playerPos.position - transform.position).normalized;
-        rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+        if (niveauDifficulte > 0.2) // plus la difficulté monte, plus les enemis deviennent reactifs.
+        {
+            rb.AddForce(direction * speed , ForceMode.Acceleration);
+
+        }
+        else
+        {
+            rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.Acceleration);
+        }
+            
     }
     
     
     public void InitializeEnemy(Transform player, float difficulty)
     {
-        
+        niveauDifficulte = difficulty;
         rb = GetComponent<Rigidbody>();
 
         // Exemple de caractéristiques dépendantes de la difficulté
@@ -55,7 +66,7 @@ public class EnemyController : MonoBehaviour
             col.material = mat;
         }
         enemyMat  = GetComponent<Renderer>().material;
-        enemyMat.SetFloat("_difficulty", difficulty); 
+        enemyMat.SetFloat("_difficulty", difficulty * 3); 
         
         // Force initiale vers le joueur
         Vector3 direction = (player.position - transform.position).normalized;
