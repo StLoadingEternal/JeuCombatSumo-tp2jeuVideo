@@ -38,9 +38,9 @@ public class LevelController : MonoBehaviour
     }
 
     // commebcer une nouvelle vague d’ennemis
-    private void StartNewWave()
+    void StartNewWave()
     {
-        if (isGameOver) return; // PERTE
+     
         
         currentWave++; 
 
@@ -63,6 +63,7 @@ public class LevelController : MonoBehaviour
             );
 
             GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+            enemy.GetComponent<Renderer>().material.SetFloat("_palier", currentWave - 1);
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
             if (enemyController != null)
             {
@@ -142,6 +143,7 @@ public class LevelController : MonoBehaviour
         audioSource.Play();
 
         //Animation de fin
+        InvokeRepeating("StartNewWave", 10, 2f);
     }
     
 }

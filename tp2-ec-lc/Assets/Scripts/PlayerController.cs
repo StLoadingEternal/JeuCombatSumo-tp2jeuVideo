@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
                 //pushDir.y = 0;
                 pushDir.Normalize();
 
-                float impactForce = isBoostForce ? 20f : 5f;
+                float impactForce = isBoostForce ? 100f : 20f;
 
                 enemyRb.AddForce(pushDir * impactForce, ForceMode.Impulse);
             }
