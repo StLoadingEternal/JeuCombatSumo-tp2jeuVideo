@@ -4,8 +4,8 @@ public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody rbPlayer;
-    private float moveSpeed = 20f;
-    private float currentSpeed;
+    private float moveSpeed = 5f;
+    
     
     public Camera mainCam;
     //public GameObject player; Demander au prof
@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private float hitEffectTimer = 0f;
 
     private readonly float hitEffectDuration = 1f;
+
+    float resistance = 0.1f;
     
     
 
@@ -69,7 +71,7 @@ public class PlayerController : MonoBehaviour
         //player.transform.forward = directionCam;
 
         // 5. Appliquer une force physique dans cette direction
-        rbPlayer.AddForce(directionCam * moveSpeed, ForceMode.Force);
+        rbPlayer.AddForce(directionCam * moveSpeed, ForceMode.Acceleration);
         
         
 
@@ -87,7 +89,7 @@ public class PlayerController : MonoBehaviour
     public void EnablePowerUp(PowerUp.PowerUpType type)
     {
         //Instancie le temps de powerup
-        powerUpTimer = 10f;
+        powerUpTimer = 20f;
 
         //effet en fonction du power-up
         switch (type)
@@ -95,8 +97,9 @@ public class PlayerController : MonoBehaviour
             case PowerUp.PowerUpType.tailleMasseBoost:
                 isBoostMasse = true;
 
-                transform.localScale = Vector3.one * 2f;
-                rbPlayer.mass *= 2f;
+                transform.localScale = Vector3.one * 1.5f;
+                rbPlayer.mass *= 1.5f;
+                resistance = 0.6f;
 
                 playerMat.SetFloat("_isBoostMasse", 1f); // variable bool shader
                 break;
@@ -115,7 +118,8 @@ public class PlayerController : MonoBehaviour
         {
             isBoostMasse = false;
             transform.localScale = Vector3.one;
-            rbPlayer.mass /= 2f;
+            rbPlayer.mass /= 1.5f;
+            resistance = 0.1f;
             playerMat.SetFloat("_isBoostMasse", 0f);
         }
 
@@ -139,9 +143,9 @@ public class PlayerController : MonoBehaviour
                 //pushDir.y = 0;
                 pushDir.Normalize();
 
-                float impactForce = isBoostForce ? 20f : 5f;
+                float impactForce = isBoostForce ? 100f : 10f;
 
-                enemyRb.AddForce(pushDir * impactForce, ForceMode.Impulse);
+                enemyRb.AddForce(pushDir * impactForce * resistance, ForceMode.Impulse);
             }
 
             // D�clencher l'effet rouge sur le joueur

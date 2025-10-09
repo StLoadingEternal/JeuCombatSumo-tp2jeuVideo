@@ -89,7 +89,7 @@ public class LevelController : MonoBehaviour
             Vector3 center = islandBounds.center;
 
             // Rayon max (en prenant la moitié de la plus petite dimension X ou Z pour rester dans l'île)
-            float radius = Mathf.Min(islandBounds.extents.x, islandBounds.extents.z);
+            float radius = Mathf.Min(islandBounds.extents.x, islandBounds.extents.z) * 0.5f;
 
             // Générer une position aléatoire dans un cercle (X,Z)
             Vector2 randomPos2D = Random.insideUnitCircle * radius;
