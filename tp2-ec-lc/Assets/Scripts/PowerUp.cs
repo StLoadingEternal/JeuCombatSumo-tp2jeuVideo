@@ -17,9 +17,10 @@ public class PowerUp : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Player controller script
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        // D�terminer le type en fonction du tag de l'objet
+        // D�terminer le type de powerUp en fonction du tag de l'objet
         switch (gameObject.tag)
         {
             case "eclairPower":
@@ -45,6 +46,7 @@ public class PowerUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            //En cas de trigger avec le player active le power up en question et détruit le gameObject
             playerControllerScript.EnablePowerUp(type);
             Destroy(gameObject);
         }

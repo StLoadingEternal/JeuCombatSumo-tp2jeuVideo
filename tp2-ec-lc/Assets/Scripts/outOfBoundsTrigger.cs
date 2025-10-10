@@ -5,10 +5,10 @@ public class OutOfBoundsTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if (other.CompareTag("Enemy")) // Est-ce un enemy ?
+        if (other.CompareTag("Enemy")) // Est-ce un ennemi ?
         {
             Destroy(other.gameObject);  // Détruit l'ennemi
-            LevelController.instance.EnemyOutOfBound();
+            LevelController.instance.EnemyOutOfBound(); // Méthode de gestion lorsqu'un ennemi tombe
         }
 
         
