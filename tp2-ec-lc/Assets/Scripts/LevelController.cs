@@ -12,6 +12,7 @@ public class LevelController : MonoBehaviour
     public GameObject[] powerUpPrefabs;// Les deux sortes de power-up
     public Transform player;
     public GameObject island;//L'île sur laquelle se déroule jeu
+   
 
 
     public int nombreEnemiAuDebut = 1;        // nombre d’ennemis de la première vague
@@ -99,7 +100,7 @@ public class LevelController : MonoBehaviour
             Vector3 spawnPos = new Vector3(
                 center.x + randomPos2D.x,
                 islandBounds.max.y + 1f,
-                center.z + randomPos2D.z//Tester avant de remettre c'était y
+                center.z + randomPos2D.y
             );
 
             Instantiate(randomPowerUp, spawnPos, Quaternion.identity);
@@ -111,7 +112,7 @@ public class LevelController : MonoBehaviour
     public void EnemyOutOfBound()
     {
         enemiesRemaining--; // bah il est mort alors haha
-        if (enemiesRemaining <= 0)
+        if (!isGameOver && enemiesRemaining <= 0)
         {
             StartNewWave();
         }
@@ -132,7 +133,8 @@ public class LevelController : MonoBehaviour
         audioSource.Play();
 
         //Animation de fin
-        InvokeRepeating("StartNewWave", 10, 2f);
+        InvokeRepeating("StartNewWave", 3f, 3f); 
+
     }
     
 }

@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
                 playerMat.SetFloat("_isBoostMasse", 1f);//Activation d'un nouveau rendu pour le materiel
                 break;
 
-            case PowerUp.PowerUpType.augmenteForce
+            case PowerUp.PowerUpType.augmenteForce:
 
                 //Augmente le timer si déjà en boost de force
                 if (isBoostForce) { 
